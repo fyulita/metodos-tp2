@@ -3,28 +3,40 @@
 #include <iostream>
 #include "eigen.h"
 
-using namespace std;
 
-
-pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter, double eps)
+std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter, double eps)
 {
-    Vector b = Vector::Random(X.cols());
-    double eigenvalue;
-    /***********************
-     * COMPLETAR CODIGO
-     **********************/
+    int n = X.cols();
+    Vector eigenvector = Vector::Random(n);
 
-    return make_pair(eigenvalue, b / b.norm());
+    for (unsigned int i = 0; i < num_iter; i++)
+    {
+        eigenvector = X * eigenvector;
+        eigenvector = eigenvector / eigenvector.norm();
+    }
+
+    double eigenvalue = eigenvector.transpose().dot(X * eigenvector) / eigenvector.norm();
+
+    return std::make_pair(eigenvalue, eigenvector);
 }
 
-pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, unsigned num_iter, double epsilon)
+std::pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, unsigned num_iter, double epsilon)
 {
-    Matrix A(X);
-    Vector eigvalues(num);
-    Matrix eigvectors(A.rows(), num);
+    Matrix A = X;
+    Vector eigenvalues(num);
+    Matrix eigenvectors(A.rows(), num);
+    double eigenvalue;
+    Vector eigenvector;
 
-    /***********************
-     * COMPLETAR CODIGO
-     **********************/
-    return make_pair(eigvalues, eigvectors);
+    for (unsigned int i = 0; i < num; i++)
+    {
+        std::pair<double, Vector> eigens = power_iteration(A);
+        eigenvalue = std::get<0>(eigens);
+        eigenvector = std::get<1>(eigens);
+        eigenvalues(i) = eigenvalue;
+        eigenvectors.col(i) = eigenvector;
+        A = A - eigenvalue * eigenvector * eigenvector.transpose();
+    }
+
+    return std::make_pair(eigenvalues, eigenvectors);
 }

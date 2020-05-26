@@ -10,3 +10,7 @@ public:
     Eigen::MatrixXd transform(SparseMatrix X);
 private:
 };
+
+Matrix create_matrix(std::string input, int images, int size=783);
+Vector mean_vector(Matrix A);
+Matrix covariance(Matrix A);
