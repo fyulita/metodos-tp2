@@ -99,7 +99,7 @@ Matrix pca(bool train, const std::string& input, int images, int size, unsigned 
 }
 
 PCA::PCA(unsigned int n_components) {
-    
+    alpha = n_components;    
 }
 
 void PCA::fit(Matrix X) {
@@ -108,5 +108,15 @@ void PCA::fit(Matrix X) {
 
 
 MatrixXd PCA::transform(SparseMatrix X) {
-    throw std::runtime_error("Sin implementar");
+    Matrix den = Matrix(X);
+    pair<Vector, Matrix> values = get_first_eigenvalues(covariance(den), alpha);
+
+    Matrix eigen = values.second;
+    MatrixXd res(den.rows(), alpha);
+
+    for(int i = 0; i < den.rows(); i++) {
+        Vector row = den.row(i).head(alpha);
+        res.row(i) = tc(row, eigen);
+    }
+    return res;
 }
