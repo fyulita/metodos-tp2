@@ -3,7 +3,7 @@
 #include "eigen.h"
 
 
-std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter) {
+std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter, double epsilon) {
     int n = X.cols();
     Vector eigenvector = Vector::Random(n);
 
@@ -17,7 +17,7 @@ std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter) {
     return std::make_pair(eigenvalue, eigenvector);
 }
 
-std::pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, unsigned num_iter) {
+std::pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, unsigned num_iter, double epsilon) {
     Matrix A = X;
     Vector eigenvalues(num);
     Matrix eigenvectors(A.rows(), num);

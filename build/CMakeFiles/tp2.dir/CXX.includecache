@@ -1403,6 +1403,8 @@ lapacke_mangling.h
 /home/fyulita/Documents/Fede/UBA/2020-1C/Metodos Numericos/Material/Laboratorio/tp02/src/eigen.cpp
 algorithm
 -
+iostream
+-
 eigen.h
 /home/fyulita/Documents/Fede/UBA/2020-1C/Metodos Numericos/Material/Laboratorio/tp02/src/eigen.h
 

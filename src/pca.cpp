@@ -99,7 +99,7 @@ Matrix pca(bool train, const std::string& input, int images, int size, unsigned 
 }
 
 PCA::PCA(unsigned int n_components) {
-    alpha = n_components;    
+    alpha = n_components;
 }
 
 void PCA::fit(Matrix X) {
@@ -109,7 +109,7 @@ void PCA::fit(Matrix X) {
 
 MatrixXd PCA::transform(SparseMatrix X) {
     Matrix den = Matrix(X);
-    pair<Vector, Matrix> values = get_first_eigenvalues(covariance(den), alpha);
+    std::pair<Vector, Matrix> values = get_first_eigenvalues(covariance(den), alpha);
 
     Matrix eigen = values.second;
     MatrixXd res(den.rows(), alpha);

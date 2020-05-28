@@ -1,0 +1,6 @@
+.idea
+.ipynb_checkpoints
+eigen/
+pybind11/
+build/
+cmake-build-debug/

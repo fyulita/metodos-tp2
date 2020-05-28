@@ -10,12 +10,12 @@ KNNClassifier::KNNClassifier(unsigned int n_neighbors)
 {
 }
 
-void KNNClassifier::fit(SparseMatrix X, Matrix y)
+void KNNClassifier::fit(Matrix X, Matrix y)
 {
 }
 
 
-Vector KNNClassifier::predict(SparseMatrix X)
+Vector KNNClassifier::predict(Matrix X)
 {
     // Creamos vector columna a devolver
     auto ret = Vector(X.rows());

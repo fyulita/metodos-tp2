@@ -9,7 +9,7 @@ public:
 
     Eigen::MatrixXd transform(SparseMatrix X);
 private:
-	unsigned int alpha;
+    unsigned int alpha;
 };
 
 Matrix create_matrix(bool train, const std::string& input, int images, int size);
