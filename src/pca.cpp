@@ -48,16 +48,21 @@ Matrix covariance(Matrix A) {
     int rows = A.rows();
     int columns = A.cols();
     Vector means = mean_vector(A);
-    double mean;
+    Vector aux;
 
     for (int i = 0; i < rows; i++) {
-        mean = means(i);
-        for (int j = 0; j < columns; j++) {
-            A(i, j) = (A(i, j) - mean) / sqrt(columns - 1);
-        }
+        aux = A.row(i);
+        A.row(i) = aux - means(i) / sqrt(columns - 1) * Vector::Ones(columns);
     }
 
-    return A.transpose() * A;
+    Matrix A_transpose = A.transpose();
+
+    std::cout << "A size:\n" << A.cols() << " x " << A.rows() << std::endl;
+    std::cout << "A_transpose size:\n" << A_transpose.cols() << " x " << A_transpose.rows() << std::endl;
+
+    Matrix C = A_transpose * A;
+
+    return C;
 }
 
 Vector tc(const Vector& x, Matrix eigenvectors, unsigned int alpha) {

@@ -5,11 +5,16 @@
 
 std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter, double epsilon) {
     int n = X.cols();
-    Vector eigenvector = Vector::Random(n);
+    Vector eigenvector = Vector::Zero(n);
+    Vector eigenvector_new = Vector::Random(n);
 
-    for (unsigned int i = 0; i < num_iter; i++) {
-        eigenvector = X * eigenvector;
-        eigenvector = eigenvector / eigenvector.norm();
+    unsigned int i = 0;
+    while (i < num_iter && !(eigenvector_new - eigenvector).isZero(epsilon)) {
+        eigenvector = eigenvector_new;
+        eigenvector_new = X * eigenvector_new;
+        eigenvector_new = eigenvector_new / eigenvector_new.norm();
+
+        i++;
     }
 
     double eigenvalue = eigenvector.transpose().dot(X * eigenvector) / eigenvector.norm();
@@ -19,21 +24,24 @@ std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter, do
 
 std::pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, unsigned num_iter, double epsilon) {
     Matrix A = X;
-    Vector eigenvalues(num);
+    Vector eigenvalues = Vector::Zero(num);
     Matrix eigenvectors(A.rows(), num);
-    double eigenvalue;
+    double eigenvalue = 100;
     Vector eigenvector;
 
-    for (unsigned int i = 0; i < num; i++) {
-        std::pair<double, Vector> eigens = power_iteration(A, num_iter);
+    unsigned int i = 0;
+    while (i < num && eigenvalue > epsilon) {
+        std::pair<double, Vector> eigens = power_iteration(A, num_iter, epsilon);
         eigenvalue = std::get<0>(eigens);
         eigenvector = std::get<1>(eigens);
 
-        std::cout << "Calculating eigenvalues and eigenvectors... " << i + 1 << "/" << num << ": " << eigenvalue << std::endl;
+        std::cout << "Calculating Eigenvalues: lambda = " << eigenvalue << "(" << i + 1 << "/" << num << ")" << std::endl;
 
         eigenvalues(i) = eigenvalue;
         eigenvectors.col(i) = eigenvector;
         A = A - eigenvalue * eigenvector * eigenvector.transpose();
+
+        i++;
     }
 
     return std::make_pair(eigenvalues, eigenvectors);
