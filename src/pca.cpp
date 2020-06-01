@@ -44,7 +44,7 @@ Vector mean_vector(Matrix A) {
     return A * v;
 }
 
-/*Matrix covariance(Matrix A) {
+Matrix covariance(Matrix A) {
     int rows = A.rows();
     int columns = A.cols();
     Vector means = mean_vector(A);
@@ -63,12 +63,17 @@ Vector mean_vector(Matrix A) {
     Matrix C = A_transpose * A;
 
     return C;
-}*/
+}
 
-Vector tc(const Vector& x, Matrix eigenvectors) {
-    //unsigned int rows = eigenvectors.rows();
-    //unsigned int columns = eigenvectors.cols();
-    //Vector eigenvector(rows);
+Vector tc(const Vector& x, Matrix eigenvectors,unsigned int alpha) {
+    unsigned int rows = eigenvectors.rows();
+    unsigned int columns = eigenvectors.cols();
+    Vector eigenvector(rows);
+
+    if (columns < alpha) {
+        alpha = columns;
+    }
+
     Vector ans = Vector(alpha);
 
     for (unsigned int i = 0; i < alpha; i++) {
@@ -78,7 +83,7 @@ Vector tc(const Vector& x, Matrix eigenvectors) {
     return ans;
 }
 
-/*Matrix pca(bool train, const std::string& input, int images, int size, unsigned int alpha) {
+Matrix pca(bool train, const std::string& input, int images, int size, unsigned int alpha) {
     Matrix X = create_matrix(train, input, images, size);
     Matrix C = covariance(X);
 
@@ -91,33 +96,33 @@ Vector tc(const Vector& x, Matrix eigenvectors) {
     Matrix TC(C.cols(), alpha);
 
     for (int i = 0; i < C.cols(); i++) {
-        TC.row(i) = tc(X.row(i), eigenvectors, alpha);
+        TC.row(i) = tc(X.row(i), eigenvectors,alpha);
     }
 
     return TC;
-}*/
+}
 
 PCA::PCA(unsigned int n_components) {
-    alpha = n_components;
+ //   alpha = n_components;
 }
 
 void PCA::fit(Matrix X) {
-    Vector mu = (X.rowwise().sum())/X.rows();
+ //   Vector mu = (X.rowwise().sum())/X.rows();
 
     //Vector aux(X.cols());
 
-    Matrix res(X.rows(), X.cols());
+   // Matrix res(X.rows(), X.cols());
 
-    for(int i = 0; i < n; i++)
-        res.row(i)=(X.row(i)-mu)/sqrt(n-1);
+    //for(int i = 0; i < n; i++)
+      //  res.row(i)=(X.row(i)-mu)/sqrt(n-1);
 
-    covariance = (res.transpose())*res;
+//    covariance = (res.transpose())*res;
 }
 
 
 MatrixXd PCA::transform(SparseMatrix X) {
     Matrix den = Matrix(X);
-    std::pair<Vector, Matrix> values = get_first_eigenvalues(covariance, alpha);
+    std::pair<Vector, Matrix> values = get_first_eigenvalues(covariance(X), alpha);
 
     Matrix eigen = values.second;
     MatrixXd res(den.rows(), alpha);

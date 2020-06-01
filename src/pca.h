@@ -10,12 +10,13 @@ public:
     Eigen::MatrixXd transform(SparseMatrix X);
 private:
     unsigned int alpha;
-    Vector tc(const Vector& x, Matrix eigenvectors);
-    Matrix covariance;
+    //Vector tc(const Vector& x, Matrix eigenvectors);
+    //Matrix covariance;
 
 };
 
+Vector tc(const Vector& x, Matrix eigenvectors,unsigned int alpha=10);
 Matrix create_matrix(bool train, const std::string& input, int images, int size);
 Vector mean_vector(Matrix A);
-//Matrix covariance(Matrix A);
-//Matrix pca(bool train, const std::string& input, int images, int size, unsigned int alpha=10);
+Matrix covariance(Matrix A);
+Matrix pca(bool train, const std::string& input, int images, int size, unsigned int alpha=10);
