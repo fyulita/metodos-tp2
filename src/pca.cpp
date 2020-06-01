@@ -44,7 +44,7 @@ Vector mean_vector(Matrix A) {
     return A * v;
 }
 
-Matrix covariance(Matrix A) {
+/*Matrix covariance(Matrix A) {
     int rows = A.rows();
     int columns = A.cols();
     Vector means = mean_vector(A);
@@ -63,28 +63,22 @@ Matrix covariance(Matrix A) {
     Matrix C = A_transpose * A;
 
     return C;
-}
+}*/
 
-Vector tc(const Vector& x, Matrix eigenvectors, unsigned int alpha) {
-    unsigned int rows = eigenvectors.rows();
-    unsigned int columns = eigenvectors.cols();
-    Vector eigenvector(rows);
-
-    if (columns < alpha) {
-        alpha = columns;
-    }
-
-    Vector ans(alpha);
+Vector tc(const Vector& x, Matrix eigenvectors) {
+    //unsigned int rows = eigenvectors.rows();
+    //unsigned int columns = eigenvectors.cols();
+    //Vector eigenvector(rows);
+    Vector ans = Vector(alpha);
 
     for (unsigned int i = 0; i < alpha; i++) {
-        eigenvector = eigenvectors.block(0, i, rows, 1);
-        ans(i) = eigenvector.dot(x);
+        ans(i) = eigenvectors.col(i).dot(x);
     }
 
     return ans;
 }
 
-Matrix pca(bool train, const std::string& input, int images, int size, unsigned int alpha) {
+/*Matrix pca(bool train, const std::string& input, int images, int size, unsigned int alpha) {
     Matrix X = create_matrix(train, input, images, size);
     Matrix C = covariance(X);
 
@@ -101,20 +95,29 @@ Matrix pca(bool train, const std::string& input, int images, int size, unsigned 
     }
 
     return TC;
-}
+}*/
 
 PCA::PCA(unsigned int n_components) {
     alpha = n_components;
 }
 
 void PCA::fit(Matrix X) {
+    Vector mu = (X.rowwise().sum())/X.rows();
 
+    //Vector aux(X.cols());
+
+    Matrix res(X.rows(), X.cols());
+
+    for(int i = 0; i < n; i++)
+        res.row(i)=(X.row(i)-mu)/sqrt(n-1);
+
+    covariance = (res.transpose())*res;
 }
 
 
 MatrixXd PCA::transform(SparseMatrix X) {
     Matrix den = Matrix(X);
-    std::pair<Vector, Matrix> values = get_first_eigenvalues(covariance(den), alpha);
+    std::pair<Vector, Matrix> values = get_first_eigenvalues(covariance, alpha);
 
     Matrix eigen = values.second;
     MatrixXd res(den.rows(), alpha);
