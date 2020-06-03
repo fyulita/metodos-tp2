@@ -11,4 +11,8 @@ public:
 
     Vector predict(Matrix X);
 private:
+	unsigned int k;
+	Matrix X;
+	Matrix Y;
+	double predictAux(Vector vec);
 };

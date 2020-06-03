@@ -2,27 +2,77 @@
 //#include <chrono>
 #include <iostream>
 #include "knn.h"
+#include <numeric>      
+#include <algorithm>    
 
 using namespace std;
 
 
 KNNClassifier::KNNClassifier(unsigned int n_neighbors)
 {
+	k = n_neighbors;
 }
 
-void KNNClassifier::fit(Matrix X, Matrix y)
-{
+void KNNClassifier::fit(Matrix X, Matrix y){
+	this->X = X;
+	this->Y = Y;	
+}
+
+vector<int> sortIndex(const Vector &v) {
+
+  vector<int> index(v.size());
+  iota(index.begin(), index.end(), 0);
+
+  sort(index.begin(), index.end(),[&v](size_t i1, size_t i2) {
+  	return v(i1) < v(i2);
+  });
+
+  return index;
+}
+
+double KNNClassifier::predictAux(Vector vec){
+	Matrix sub = Matrix(X.rows(), X.cols());
+    for(int i = 0; i < sub.rows(); i++){
+        sub.row(i) = vec;
+    }
+	
+	Matrix aux = Matrix(X.rows(), X.cols());
+    aux = X - sub;
+    
+    Vector sum = Vector(X.rows());
+    for(int i = 0; i < X.rows(); i++){
+        sum(i) = aux.row(i).squaredNorm();
+    }
+
+    Vector res = Vector(k);
+    vector<int> ind = sortIndex(sum);
+    ind.resize(k); 
+        
+    for(unsigned int i = 0; i < k; i++){
+        res(i) = Y(0,ind[i]);
+    }
+    
+    Vector coun(res.size());
+    for(int i = 0; i<res.size(); i++){
+    	coun(i) = count(res.begin(),res.end(),res(i));
+ 	}
+    double max = -1;
+ 	int index = -1;
+    for(int i = 0; i < coun.count(); i++){
+    	if(coun(i) > max){
+       		max = coun(i);
+       		index = i;
+     	}
+   }
+   return res(index);
 }
 
 
-Vector KNNClassifier::predict(Matrix X)
-{
-    // Creamos vector columna a devolver
+Vector KNNClassifier::predict(Matrix X){
     auto ret = Vector(X.rows());
 
-    for (unsigned k = 0; k < X.rows(); ++k)
-    {
-        ret(k) = 0;
+    for (unsigned k = 0; k < X.rows(); ++k) {
+        ret(k) = predictAux(X.row(k));
     }
 
     return ret;
