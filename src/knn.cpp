@@ -58,8 +58,14 @@ double KNNClassifier::predictAux(Vector vec){
 
     //contamos la cantidad de apariciones de cada tag entre los k cercanos
     Vector coun(res.size());
-    for(int i = 0; i<res.size(); i++){
-    	coun(i) = count(res.begin(),res.end(),res(i));
+    for(int i = 0; i<coun.size(); i++){
+    	//coun(i) = count(res.begin(),res.end(),res(i));
+    	coun(i) = 0;
+    	for (int j = 0; j < res.size(); j++) {
+    	    if (res(i) == res(j)) {
+    	        coun(i)++;
+    	    }
+    	}
  	}
 
     // aca no se podria hacer un sortIndex()? y usar el primero

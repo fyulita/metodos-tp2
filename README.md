@@ -27,9 +27,18 @@ git submodule add --force https://github.com/eigenteam/eigen-git-mirror
 git submodule add --force https://github.com/pybind/pybind11
 git mv eigen-git-mirror eigen
 # Elegimos versiones de eigen y pybind
-cd pybind11/ && git checkout v2.2.4 && cd ..
+cd pybind11 && git checkout v2.2.4 && cd ..
 cd eigen && git checkout 3.3.7 && cd ..
 ```
+
+Intentar añadir estos submódulos puede dar error. En ese caso, borrarlos con
+
+```
+git rm -rf eigen-git-mirror
+git rm -rf pybind11
+```
+
+y luego intentar añadirlos de vuelta.
 
 3. Instalar requerimientos
 

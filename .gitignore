@@ -1,7 +1,5 @@
 .idea
 .ipynb_checkpoints
-eigen
-pybind11
 build
 cmake-build-debug
 notebooks/metnum.cpython-38-x86_64-linux-gnu.so
