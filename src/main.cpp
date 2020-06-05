@@ -1,6 +1,7 @@
 #include <iostream>
 #include "pca.h"
 #include "eigen.h"
+#include "knn.h"
 
 // train.csv: 42000 images of 784 pixels (28x28). First column is the label.
 // test.csv: 28000 images of 784 pixels (28x28).
