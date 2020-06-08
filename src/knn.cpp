@@ -18,19 +18,9 @@ void KNNClassifier::fit(Matrix X, Matrix y){
 	this->Y = y;
 }
 
-vector<int> sortIndex(const Vector &v) {
-
-  vector<int> index(v.size());
-  iota(index.begin(), index.end(), 0);
-
-  sort(index.begin(), index.end(),[&v](size_t i1, size_t i2) {
-  	return v(i1) < v(i2);
-  });
-
-  return index;
-}
 
 double KNNClassifier::predictAux(Vector vec){
+
 	Matrix sub = Matrix(X.rows(), X.cols());
     for(int i = 0; i < sub.rows(); i++){
         sub.row(i) = vec;
@@ -41,18 +31,22 @@ double KNNClassifier::predictAux(Vector vec){
     aux = X - sub;
 
     //termino de hacer distancia euclideana
-    Vector sum = Vector(X.rows());
+    Vector dis = Vector(X.rows());
     for(int i = 0; i < X.rows(); i++){
-        sum(i) = aux.row(i).squaredNorm();
+        dis(i) = aux.row(i).squaredNorm();
     }
 
-    //sorteo por cercania y me quedo con los K mas cercanos
-    Vector res = Vector(k);
-    vector<int> ind = sortIndex(sum);
-    ind.resize(k);
+    //ordeno digitos por distancia
+    vector<int> ind(dis.size());
+   	iota(ind.begin(), ind.end(), 0);
+	sort(ind.begin(), ind.end(),[&dis](size_t i1, size_t i2) {return dis(i1) < dis(i2);});
+  
+    ind.resize(k);  //me quedo solo con los mas cercanos
+
 
     //lleno el vector res con los tags pertinentes a los k cercanos
-    for(unsigned int i = 0; i < k; i++){
+    Vector res = Vector(k);
+	for(unsigned int i = 0; i < k; i++){
         res(i) = Y(0,ind[i]);
     }
 
