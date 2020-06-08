@@ -12,16 +12,11 @@
 ## Instrucciones
 
 
-1. Crear un repo git en donde se bajen esto
+1. Bajarse los repositorios de `pybind` y `eigen` como submódulos
 
 ```
-git init
-git remote add origin <nuestra-nueva-url-de-git>
-```
-
-2. Bajarse los repositorios de `pybind` y `eigen` como submódulos
-
-```
+rm -rf eigen
+rm -rf pybind11
 git submodule init
 git submodule add --force https://github.com/eigenteam/eigen-git-mirror
 git submodule add --force https://github.com/pybind/pybind11
@@ -31,28 +26,19 @@ cd pybind11 && git checkout v2.2.4 && cd ..
 cd eigen && git checkout 3.3.7 && cd ..
 ```
 
-Intentar añadir estos submódulos puede dar error. En ese caso, borrarlos con
-
-```
-git rm -rf eigen-git-mirror
-git rm -rf pybind11
-```
-
-y luego intentar añadirlos de vuelta.
-
-3. Instalar requerimientos
+2. Instalar requerimientos
 
 ```
 pip install -r requirements.txt
 ```
 
-4. Descomprimir datos
+3. Descomprimir datos
 
 ```
 cd data && gunzip *.gz && cd ..
 ```
 
-5. Correr Jupyter
+4. Correr Jupyter
 
 ```
 jupyter lab
