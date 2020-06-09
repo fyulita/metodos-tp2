@@ -69,6 +69,7 @@ Matrix covariance(Matrix A) {
 // Devuelve una matrix con los vectores tc en sus filas.
 Matrix pca(bool train, const std::string& input, unsigned int alpha) {
     Matrix X = create_matrix(train, input);
+    std::cout << "Calculando covarianza..." << std::endl;
     Matrix C = covariance(X);
 
     std::pair<Vector, Matrix> eigens = get_first_eigenvalues(C, alpha);
