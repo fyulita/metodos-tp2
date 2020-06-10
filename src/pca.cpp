@@ -4,9 +4,8 @@
 #include "eigen.h"
 
 
-// Convierte los datos del csv "input" a una matriz. El bool "train" indica si el csv es de entrenamiento, ya que la
-// primera columna de estos archivos no es un pixel sino que es el tag.
-Matrix create_matrix(bool train, const std::string& input) {
+// Convierte los datos del csv "input" a una matriz.
+Matrix create_matrix(const std::string& input) {
     Matrix X;
     std::ifstream fileInput;
     fileInput.open(input);
@@ -21,11 +20,7 @@ Matrix create_matrix(bool train, const std::string& input) {
         if (row_n >= 0) {
             X.conservativeResize(row_n + 1, max_column_n);
 
-            if (train) {
-                column_n = -1;
-            } else {
-                column_n = 0;
-            }
+            column_n = 0;
 
             while(std::getline(lineStream,cell,',')) {
                 if (column_n >= 0) {
@@ -67,8 +62,8 @@ Matrix covariance(Matrix A) {
 }
 
 // Devuelve una matrix con los vectores tc en sus filas.
-Matrix pca(bool train, const std::string& input, unsigned int alpha) {
-    Matrix X = create_matrix(train, input);
+Matrix pca(const std::string& input, unsigned int alpha) {
+    Matrix X = create_matrix(input);
     std::cout << "Calculando covarianza..." << std::endl;
     Matrix C = covariance(X);
 
@@ -82,38 +77,21 @@ Matrix pca(bool train, const std::string& input, unsigned int alpha) {
 }
 
 PCA::PCA(unsigned int n_components) {
-    // alpha = n_components;
+    alpha = n_components;
 }
 
 void PCA::fit(Matrix X) {
-    /*
-    Vector mu = (X.rowwise().sum())/X.rows();
-
-    Vector aux(X.cols());
-
-    Matrix res(X.rows(), X.cols());
-
-    for (int i = 0; i < n; i++) {
-        res.row(i)=(X.row(i)-mu)/sqrt(n-1);
-        covariance = (res.transpose())*res;
-    }
-    */
 }
 
-MatrixXd PCA::transform(SparseMatrix X) {
-    Matrix den = Matrix(X);
-    /*
-    std::pair<Vector, Matrix> values = get_first_eigenvalues(covariance(X), alpha);
+Matrix PCA::transform(Matrix X) {
+    std::cout << "Calculando covarianza..." << std::endl;
+    Matrix C = covariance(X);
 
-    Matrix eigen = values.second;
-    MatrixXd res(den.rows(), alpha);
+    std::pair<Vector, Matrix> eigens = get_first_eigenvalues(C, alpha);
+    Vector eigenvalues = std::get<0>(eigens);
+    Matrix eigenvectors = std::get<1>(eigens);
 
-    for (int i = 0; i < den.rows(); i++) {
-        Vector row = den.row(i).head(alpha);
-        res.row(i) = tc(row, eigen);
-    }
+    Matrix TC = X * eigenvectors;
 
-    return res;
-    */
-    return den;
+    return TC;
 }

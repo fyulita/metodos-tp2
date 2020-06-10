@@ -8,7 +8,7 @@ class PCA {
 
         void fit(Matrix X);
 
-        Eigen::MatrixXd transform(SparseMatrix X);
+        Matrix transform(Matrix X);
     private:
         unsigned int alpha;
         //Vector tc(const Vector& x, Matrix eigenvectors);
@@ -16,4 +16,4 @@ class PCA {
 };
 
 
-Matrix pca(bool train, const std::string& input, unsigned int alpha=300);
+Matrix pca(const std::string& input, unsigned int alpha=300);

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(tp02)
+project(tp2)
 
 set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
@@ -48,7 +48,7 @@ message(CMAKE_INSTALL_PREFIX = "${CMAKE_INSTALL_PREFIX}")
 install(TARGETS metnum DESTINATION ${CMAKE_INSTALL_PREFIX}/notebooks)
 
 # Crear un binario para testing manteniendo las dependencias de python por separado
-add_executable(tp02
+add_executable(tp2
         src/main.cpp
         src/knn.cpp
         src/pca.cpp

@@ -19,7 +19,6 @@ void KNNClassifier::fit(Matrix X, Matrix y) {
 
 
 double KNNClassifier::predictAux(Vector vec) {
-
 	Matrix sub = Matrix(X.rows(), X.cols());
     for (int i = 0; i < sub.rows(); i++) {
         sub.row(i) = vec;
