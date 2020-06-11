@@ -60,33 +60,27 @@ int main(int argc, char** argv){
         string test_set_file = argv[6];
         string classif = argv[8];
 
-        if (method == 0) { // kNN
-            Matrix train_set = create_matrix(train_set_file);
-            Matrix y = train_set.col(0);
-            Matrix X = train_set.block(0, 1, train_set.rows(), train_set.cols() - 1);
-            Matrix test_set = create_matrix(test_set_file);
+        Matrix train_set_matrix = create_matrix(train_set_file);
+        Matrix y = train_set_matrix.col(0);
+        Matrix X_matrix = train_set_matrix.block(0, 1, train_set_matrix.rows(), train_set_matrix.cols() - 1);
+        Matrix test_set_matrix = create_matrix(test_set_file);
 
-            unsigned int k = 100;
-            KNNClassifier knn = KNNClassifier(k);
-            knn.fit(X, y);
-            Vector prediction = knn.predict(test_set);
+        unsigned int k = 100;
+        KNNClassifier knn = KNNClassifier(k);
+
+        if (method == 0) { // kNN
+            knn.fit(X_matrix, y);
+            Vector prediction = knn.predict(test_set_matrix);
             save_vector(prediction, classif);
 
             return 0;
         } else if (method == 1) { // PCA + kNN
-            Matrix train_set_matrix = create_matrix(train_set_file);
-            Matrix y = train_set_matrix.col(0);
-            Matrix X_matrix = train_set_matrix.block(0, 1, train_set_matrix.rows(), train_set_matrix.cols() - 1);
-            Matrix test_set_matrix = create_matrix(test_set_file);
-
-            unsigned int alpha = 300;
+            unsigned int alpha = 100;
             PCA X = PCA(alpha);
             PCA test_set = PCA(alpha);
             Matrix X_trans = X.transform(X_matrix);
             Matrix test_set_trans = test_set.transform(test_set_matrix);
 
-            unsigned int k = 100;
-            KNNClassifier knn = KNNClassifier(k);
             knn.fit(X_trans, y);
             Vector prediction = knn.predict(test_set_trans);
             save_vector(prediction, classif);
