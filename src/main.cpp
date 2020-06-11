@@ -6,7 +6,7 @@
 using namespace std;
 
 // Convierte los datos del csv "input" a una matriz.
-Matrix parse(const std::string& input) {
+Matrix create_matrix(const std::string& input) {
     Matrix X;
     std::ifstream fileInput;
     fileInput.open(input);
@@ -40,6 +40,16 @@ Matrix parse(const std::string& input) {
     return X;
 }
 
+// Guarda una matriz en un archivo csv.
+void save_vector(const Vector &A, const string &output) {
+    ofstream Output;
+    Output.open(output);
+    for (int i = 0; i < A.rows(); i++) {
+        Output << A(i) << "\n";
+    }
+    Output.close();
+}
+
 int main(int argc, char** argv){
     if (argc != 9) {
         printf("Parametros Invalidos!\n");
@@ -51,37 +61,37 @@ int main(int argc, char** argv){
         string classif = argv[8];
 
         if (method == 0) { // kNN
-            unsigned int k = 100;
-            KNNClassifier knn = KNNClassifier(k);
-
-            Matrix train_set = parse(train_set_file);
+            Matrix train_set = create_matrix(train_set_file);
             Matrix y = train_set.col(0);
             Matrix X = train_set.block(0, 1, train_set.rows(), train_set.cols() - 1);
+            Matrix test_set = create_matrix(test_set_file);
 
-            Matrix test_set = parse(test_set_file);
-
+            unsigned int k = 100;
+            KNNClassifier knn = KNNClassifier(k);
             knn.fit(X, y);
             Vector prediction = knn.predict(test_set);
-        }
+            save_vector(prediction, classif);
 
-        /*
-        string function = argv[1];
-        if (function == "pca") {
-            bool train = atoi(argv[2]) == 1;
-            string input = argv[3];
-            input = "../data/" + input;
-            unsigned int alpha = atoi(argv[4]);
-            string output = argv[5];
-            output = "../data/" + output;
+            return 0;
+        } else if (method == 1) { // PCA + kNN
+            Matrix train_set_matrix = create_matrix(train_set_file);
+            Matrix y = train_set_matrix.col(0);
+            Matrix X_matrix = train_set_matrix.block(0, 1, train_set_matrix.rows(), train_set_matrix.cols() - 1);
+            Matrix test_set_matrix = create_matrix(test_set_file);
 
-            Matrix ans = pca(train, input, alpha);
+            unsigned int alpha = 300;
+            PCA X = PCA(alpha);
+            PCA test_set = PCA(alpha);
+            Matrix X_trans = X.transform(X_matrix);
+            Matrix test_set_trans = test_set.transform(test_set_matrix);
 
-            const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
-            ofstream file(output.c_str());
-            file << ans.format(CSVFormat);
+            unsigned int k = 100;
+            KNNClassifier knn = KNNClassifier(k);
+            knn.fit(X_trans, y);
+            Vector prediction = knn.predict(test_set_trans);
+            save_vector(prediction, classif);
 
             return 0;
         }
-        */
     }
 }

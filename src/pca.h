@@ -11,9 +11,6 @@ class PCA {
         Matrix transform(Matrix X);
     private:
         unsigned int alpha;
-        //Vector tc(const Vector& x, Matrix eigenvectors);
-        //Matrix covariance;
+        Vector mean_vector(Matrix A);
+        Matrix covariance(Matrix A);
 };
-
-
-Matrix pca(const std::string& input, unsigned int alpha=300);
