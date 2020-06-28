@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #include "pca.h"
 #include "eigen.h"
 
@@ -28,26 +29,7 @@ Matrix PCA::covariance(Matrix A) {
     return A.transpose() * A;
 }
 
-void PCA::fit(Matrix A) {
-    for (int i = 0; i < A.size(); i++) {
-        for (int j = 0; j < A.size(); j++) {
-            A(i, j) = A(i, j) + 1;
-        }
-    }
-    /*
-    int n = A.rows();
-    Vector means = mean_vector(A);
-    Vector aux;
-    for (int i = 0; i < n; i++) {
-        aux = A.row(i);
-        A.row(i) = (aux - means) / sqrt(n - 1);
-    }
-
-    A = A.transpose() * A;
-     */
-}
-
-Matrix PCA::transform(Matrix X) {
+void PCA::fit(Matrix X) {
     std::cout << "Calculando covarianza..." << std::endl;
     Matrix C = covariance(X);
 
@@ -55,7 +37,11 @@ Matrix PCA::transform(Matrix X) {
     Vector eigenvalues = std::get<0>(eigens);
     Matrix eigenvectors = std::get<1>(eigens);
 
-    Matrix TC = X * eigenvectors;
+    std::cout << eigenvectors << std::endl;
 
-    return TC;
+    this->T = eigenvectors;
+}
+
+MatrixXd PCA::transform(Matrix X) {
+    return X * T;
 }

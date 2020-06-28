@@ -78,6 +78,8 @@ int main(int argc, char** argv){
             unsigned int alpha = 100;
             PCA X = PCA(alpha);
             PCA test_set = PCA(alpha);
+            X.fit(X_matrix);
+            test_set.fit(test_set_matrix);
             Matrix X_trans = X.transform(X_matrix);
             Matrix test_set_trans = test_set.transform(test_set_matrix);
 

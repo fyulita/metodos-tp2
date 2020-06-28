@@ -5,11 +5,12 @@
 class PCA {
     public:
         PCA(unsigned int n_components);
-        void fit(Matrix A);
-        Matrix transform(Matrix X);
+        void fit(Matrix X);
+        Eigen::MatrixXd transform(Matrix X);
 
     private:
         unsigned int alpha;
+        Matrix T;
         Vector mean_vector(Matrix A);
         Matrix covariance(Matrix A);
 };
