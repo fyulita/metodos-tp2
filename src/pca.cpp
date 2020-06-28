@@ -28,7 +28,23 @@ Matrix PCA::covariance(Matrix A) {
     return A.transpose() * A;
 }
 
-void PCA::fit(Matrix X) {
+void PCA::fit(Matrix A) {
+    for (int i = 0; i < A.size(); i++) {
+        for (int j = 0; j < A.size(); j++) {
+            A(i, j) = A(i, j) + 1;
+        }
+    }
+    /*
+    int n = A.rows();
+    Vector means = mean_vector(A);
+    Vector aux;
+    for (int i = 0; i < n; i++) {
+        aux = A.row(i);
+        A.row(i) = (aux - means) / sqrt(n - 1);
+    }
+
+    A = A.transpose() * A;
+     */
 }
 
 Matrix PCA::transform(Matrix X) {
