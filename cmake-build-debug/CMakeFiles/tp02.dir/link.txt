@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -g3 -O0 -Werror -g  -rdynamic CMakeFiles/tp02.dir/src/main.cpp.o CMakeFiles/tp02.dir/src/knn.cpp.o CMakeFiles/tp02.dir/src/pca.cpp.o CMakeFiles/tp02.dir/src/eigen.cpp.o  -o tp02 
