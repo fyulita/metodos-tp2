@@ -1,6 +1,3 @@
 .idea
-.ipynb_checkpoints
-build
-cmake-build-debug
-notebooks/metnum.cpython-38-x86_64-linux-gnu.so
-notebooks/.ipynb_checkpoints
+data/test.csv
+data/train.csv

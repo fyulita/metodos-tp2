@@ -1,7 +1,6 @@
 # Reconocimiento de dígitos: TP2 de Métodos Numéricos
 ## 2020, 1er cuatrimestre
 
-
 ### Integrantes
 
 - Justo López Menardi (juslopezm@gmail.com)
@@ -12,114 +11,68 @@
 ## Instrucciones
 
 
-1. Bajarse los repositorios de `pybind` y `eigen` como submódulos
+1. Descargar el repositorio con git
 
 ```
-rm -rf eigen
-rm -rf pybind11
+git clone https://github.com/fyulita/metodos-tp2.git
+cd metodos-tp2
+```
+
+2. Bajarse los repositorios de `pybind` y `eigen` como submódulos
+
+```
 git submodule init
-git submodule add --force https://github.com/eigenteam/eigen-git-mirror
-git submodule add --force https://github.com/pybind/pybind11
-git mv eigen-git-mirror eigen
-# Elegimos versiones de eigen y pybind
-cd pybind11 && git checkout v2.2.4 && cd ..
-cd eigen && git checkout 3.3.7 && cd ..
+git submodule update
 ```
 
-2. Instalar requerimientos
+3. Instalar requerimientos con pip
 
 ```
 pip install -r requirements.txt
 ```
 
-3. Descomprimir datos
+4. Descomprimir los datos de entrenamiento y de test
 
 ```
-cd data && gunzip *.gz && cd ..
+gunzip data/train.csv.gz
+gunzip data/test.csv.gz
 ```
 
-4. Correr Jupyter
-
-```
-jupyter lab
-```
-
-Listo. Ya pueden disfrutar del TP2
+Listo! Ya se puede disfrutar del TP2
 
 ### Datos
 
 En `data/` tenemos los datos de entrenamiento (`data/train.csv`) y los de test (`data/test.csv`).
 
-### Otros directorios
+### Notebooks
 
-En `src/` está el código de C++, en particular en `src/metnum.cpp` está el entry-point de pybind.
-
-En `notebooks/` hay ejemplos para correr partes del TP usando sklearn y usando la implementación en C++.
-
-
-## Creación de un entorno virtual de python
-
-### Con pyenv
-
-```
-curl https://pyenv.run | bash
-```
-
-Luego, se sugiere agregar unas líneas al bashrc. Hacer eso, **REINICIAR LA CONSOLA** y luego...
-
-```
-pyenv install 3.6.5
-pyenv global 3.6.5
-pyenv virtualenv 3.6.5 tp2
-```
-
-En el directorio del proyecto
-
-```
-pyenv activate tp2
-```
-
-### Directamente con python3
-```
-python3 -m venv tp2
-source tp2/bin/activate
-```
-
-### Con Conda
-```
-conda create --name tp2 python=3.6.5
-conda activate tp2
-```
-
-## Instalación de las depencias
-```
-pip install -r requirements.txt
-```
-
-## Correr notebooks de jupyter
+En `notebooks/` está la experimentación descrita en el informe. Para correrla usamos Jupyter Lab
 
 ```
 cd notebooks
 jupyter lab
 ```
-o  notebook
+o  Jupyter Notebook
+
 ```
+cd notebooks
 jupyter notebook
 ```
 
-
 ## Compilación
-Ejecutar la primera celda del notebook `knn.ipynb` o seguir los siguientes pasos:
 
+Ejecutar la primera celda del notebook o seguir los siguientes pasos:
 
-- Compilar el código C++ en un módulo de python
+- Compilar el código C++ en un módulo de Python
+
 ```
 mkdir build
 cd build
 rm -rf *
 cmake -DPYTHON_EXECUTABLE="$(which python)" -DCMAKE_BUILD_TYPE=Release ..
 ```
+
 - Al ejecutar el siguiente comando se compila e instala la librería en el directorio `notebooks`
+
 ```
 make install
-```
