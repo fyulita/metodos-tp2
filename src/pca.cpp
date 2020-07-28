@@ -9,7 +9,7 @@ PCA::PCA(unsigned int n_components) {
 
 // Devuelve un vector con el promedio de cada columna de A.
 Vector PCA::mean_vector(Matrix A) {
-    int n = A.rows();
+    unsigned int n = A.rows();
     Vector v(n);
     v.fill((double)1 / (double)n);
 

@@ -23,6 +23,10 @@ std::pair<double, Vector> power_iteration(const Matrix& X, unsigned num_iter, do
 }
 
 std::pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, unsigned num_iter, double epsilon) {
+    if (num > X.rows()) {
+        num = X.rows();
+    }
+
     Matrix A = X;
     Vector eigenvalues = Vector::Zero(num);
     Matrix eigenvectors(A.rows(), num);
