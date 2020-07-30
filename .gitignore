@@ -1,3 +1,8 @@
 .idea
 data/test.csv
 data/train.csv
+data/test-small.csv
+data/train-small.csv
+cmake
+cmake-build-debug
+build

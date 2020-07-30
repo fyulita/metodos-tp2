@@ -8,7 +8,7 @@ PCA::PCA(unsigned int n_components) {
 }
 
 // Devuelve un vector con el promedio de cada columna de A.
-Vector PCA::mean_vector(Matrix A) {
+Vector PCA::mean_vector(const Matrix& A) {
     unsigned int n = A.rows();
     Vector v(n);
     v.fill((double)1 / (double)n);
@@ -29,19 +29,17 @@ Matrix PCA::covariance(Matrix A) {
     return A.transpose() * A;
 }
 
-void PCA::fit(Matrix X) {
-    std::cout << "Calculando covarianza..." << std::endl;
+void PCA::fit(const Matrix& X) {
+    std::cout << "Calculando covarianza" << std::endl;
     Matrix C = covariance(X);
 
     std::pair<Vector, Matrix> eigens = get_first_eigenvalues(C, alpha);
     Vector eigenvalues = std::get<0>(eigens);
     Matrix eigenvectors = std::get<1>(eigens);
 
-    std::cout << eigenvectors << std::endl;
-
     this->T = eigenvectors;
 }
 
-MatrixXd PCA::transform(Matrix X) {
+MatrixXd PCA::transform(const Matrix& X) {
     return X * T;
 }

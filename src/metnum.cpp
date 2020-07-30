@@ -16,8 +16,8 @@ PYBIND11_MODULE(metnum, m) {
     py::class_<PCA>(m, "PCA")
         .def(py::init<unsigned int>())
         .def("fit", &PCA::fit)
-        .def("transform", &PCA::transform);
-        // .def("covariance", &PCA::covariance);
+        .def("transform", &PCA::transform)
+        .def("covariance", &PCA::covariance);
     m.def(
         "power_iteration", &power_iteration,
         "Function that calculates eigenvector",

@@ -3,55 +3,50 @@
 #include <iostream>
 #include "knn.h"
 #include <numeric>      
-#include <algorithm>    
+#include <algorithm>
 
 using namespace std;
 
 
 KNNClassifier::KNNClassifier(unsigned int n_neighbors) {
-	k = n_neighbors;
+	this->k = n_neighbors;
 }
 
-void KNNClassifier::fit(Matrix X, Matrix y) {
-	this->X = X;
-	this->Y = y;
+void KNNClassifier::fit(const Matrix& A, const Vector& v) {
+	this->X = A;
+	this->y = v;
 }
 
-
-double KNNClassifier::predictAux(Vector vec) {
-	Matrix sub = Matrix(X.rows(), X.cols());
+double KNNClassifier::predictAux(const Vector& vec) {
+	Matrix sub(X.rows(), X.cols());
     for (int i = 0; i < sub.rows(); i++) {
         sub.row(i) = vec;
     }
 
-
-	Matrix aux = Matrix(X.rows(), X.cols());
+	Matrix aux(X.rows(), X.cols());
     aux = X - sub;
 
-    //termino de hacer distancia euclideana
-    Vector dis = Vector(X.rows());
+    // Termino de hacer distancia euclideana.
+    Vector dis(X.rows());
     for (int i = 0; i < X.rows(); i++) {
         dis(i) = aux.row(i).squaredNorm();
     }
 
-    //ordeno digitos por distancia
+    // Ordeno digitos por distancia.
     vector<int> ind(dis.size());
    	iota(ind.begin(), ind.end(), 0);
-	sort(ind.begin(), ind.end(),[&dis](size_t i1, size_t i2) {return dis(i1) < dis(i2);});
-  
+	sort(ind.begin(), ind.end(), [&dis](size_t i1, size_t i2) {return dis(i1) < dis(i2);});
     ind.resize(k);  //me quedo solo con los mas cercanos
 
-
-    //lleno el vector res con los tags pertinentes a los k cercanos
-    Vector res = Vector(k);
+    // Lleno el vector res con los tags pertinentes a los k cercanos.
+    Vector res(k);
 	for (unsigned int i = 0; i < k; i++) {
-        res(i) = Y(0,ind[i]);
+        res(i) = y(ind[i]);
     }
 
-    //contamos la cantidad de apariciones de cada tag entre los k cercanos
+    // Contamos la cantidad de apariciones de cada tag entre los k cercanos.
     Vector coun(res.size());
-    for (int i = 0; i<coun.size(); i++) {
-    	//coun(i) = count(res.begin(),res.end(),res(i));
+    for (int i = 0; i < coun.size(); i++) {
     	coun(i) = 0;
     	for (int j = 0; j < res.size(); j++) {
     	    if (res(i) == res(j)) {
@@ -60,7 +55,7 @@ double KNNClassifier::predictAux(Vector vec) {
     	}
  	}
 
-    // aca no se podria hacer un sortIndex()? y usar el primero
+    // Hallamos el maximo de coun.
     double max = -1;
  	int index = -1;
     for (int i = 0; i < coun.count(); i++) {
@@ -69,15 +64,14 @@ double KNNClassifier::predictAux(Vector vec) {
        		index = i;
      	}
    }
+
    return res(index);
 }
 
-
-Vector KNNClassifier::predict(Matrix X) {
-    auto ret = Vector(X.rows());
-
-    for (unsigned k = 0; k < X.rows(); ++k) {
-        ret(k) = predictAux(X.row(k));
+Vector KNNClassifier::predict(Matrix A) {
+    Vector ret(A.rows());
+    for (unsigned int i = 0; i < A.rows(); i++) {
+        ret(i) = predictAux(A.row(i));
     }
 
     return ret;

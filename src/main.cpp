@@ -50,44 +50,113 @@ void save_vector(const Vector &A, const string &output) {
     Output.close();
 }
 
-int main(int argc, char** argv){
-    if (argc != 9) {
-        printf("Parametros Invalidos!\n");
-        return 1;
+int run(const string& train_set_file, const string& test_set_file, const string& classif, const unsigned int& k, const unsigned int& alpha, const unsigned int& method) {
+    Matrix train_set_matrix = create_matrix(train_set_file);
+    Matrix y_train = train_set_matrix.col(0);
+    Matrix X_train = train_set_matrix.block(0, 1, train_set_matrix.rows(), train_set_matrix.cols() - 1);
+    Matrix X_predict = create_matrix(test_set_file);
+
+    KNNClassifier knn = KNNClassifier(k);
+
+    if (method == 0) { // kNN
+        knn.fit(X_train, y_train);
+        Vector y_predict = knn.predict(X_predict);
+        save_vector(y_predict, classif);
+
+        return 0;
+    } else if (method == 1) { // PCA + kNN
+        PCA pca = PCA(alpha);
+        pca.fit(X_train);
+        Matrix X_train_trans = pca.transform(X_train);
+        Matrix X_predict_trans = pca.transform(X_predict);
+
+        knn.fit(X_train_trans, y_train);
+        Vector y_predict = knn.predict(X_predict_trans);
+        save_vector(y_predict, classif);
+
+        return 0;
     } else {
-        int method = atoi(argv[2]);
+        printf("Metodo Invalido\n");
+        return 1;
+    }
+}
+
+int main(int argc, char** argv){
+    if (!(argc == 2 || argc == 9 || argc == 11 || argc == 13)) {
+        printf("Parametros Invalidos\n");
+        return 1;
+    } else if (argc == 2) {
+        string help = argv[1];
+        if (help == "--help") {
+            printf("Uso: tp2 -m <metodo> --k <k> --alpha <alpha> -i <entrenamiento> -q <test> -o <output>\n");
+            printf("\n");
+            printf("<metodo>: 0 para kNN solo y 1 para PCA+kNN.\n");
+            printf("<entrenamiento>: Direccion para el archivo CSV de entrenamiento.\n");
+            printf("<test>: Direccion para el archivo CSV de test.\n");
+            printf("<output>: Direccion para el archivo CSV donde guardar el resultado.\n");
+            printf("\n");
+            printf("Opcionales:\n");
+            printf("\n");
+            printf("--k <k>: Establece el valor de k para kNN como <k>. El valor predeterminado es 10.\n");
+            printf("--alpha <alpha>: Establece el valor de alpha para PCA como <alpha>. El valor predeterminado es 30.\n");
+
+            return 0;
+        } else {
+            printf("Parametros Invalidos\n");
+            return 1;
+        }
+    } else if (argc == 9) {
+        unsigned int method = atoi(argv[2]);
         string train_set_file = argv[4];
         string test_set_file = argv[6];
         string classif = argv[8];
 
-        Matrix train_set_matrix = create_matrix(train_set_file);
-        Matrix y = train_set_matrix.col(0);
-        Matrix X_matrix = train_set_matrix.block(0, 1, train_set_matrix.rows(), train_set_matrix.cols() - 1);
-        Matrix test_set_matrix = create_matrix(test_set_file);
+        unsigned int k = 10;
+        unsigned int alpha = 30;
 
-        unsigned int k = 100;
-        KNNClassifier knn = KNNClassifier(k);
+        return run(train_set_file, test_set_file, classif, k, alpha, method);
+    } else if (argc == 11) {
+        unsigned int method = atoi(argv[2]);
+        string train_set_file = argv[6];
+        string test_set_file = argv[8];
+        string classif = argv[10];
 
-        if (method == 0) { // kNN
-            knn.fit(X_matrix, y);
-            Vector prediction = knn.predict(test_set_matrix);
-            save_vector(prediction, classif);
+        string optional = argv[3];
+        if (optional == "--k") {
+            unsigned int k = atoi(argv[4]);
+            unsigned int alpha = 30;
 
-            return 0;
-        } else if (method == 1) { // PCA + kNN
-            unsigned int alpha = 100;
-            PCA X = PCA(alpha);
-            PCA test_set = PCA(alpha);
-            X.fit(X_matrix);
-            test_set.fit(test_set_matrix);
-            Matrix X_trans = X.transform(X_matrix);
-            Matrix test_set_trans = test_set.transform(test_set_matrix);
+            return run(train_set_file, test_set_file, classif, k, alpha, method);
+        } else if (optional == "--alpha") {
+            unsigned int k = 10;
+            unsigned int alpha = atoi(argv[4]);
 
-            knn.fit(X_trans, y);
-            Vector prediction = knn.predict(test_set_trans);
-            save_vector(prediction, classif);
+            return run(train_set_file, test_set_file, classif, k, alpha, method);
+        } else {
+            printf("Parametros Invalidos\n");
+            return 1;
+        }
+    } else if (argc == 13) {
+        unsigned int method = atoi(argv[2]);
+        string train_set_file = argv[8];
+        string test_set_file = argv[10];
+        string classif = argv[12];
 
-            return 0;
+        string optional1 = argv[3];
+        string optional2 = argv[5];
+        if (optional1 == "--k" && optional2 == "--alpha") {
+            unsigned int k = atoi(argv[4]);
+            unsigned int alpha = atoi(argv[6]);
+
+            return run(train_set_file, test_set_file, classif, k, alpha, method);
+        } else if (optional1 == "--alpha" && optional2 == "--k") {
+            unsigned int k = atoi(argv[6]);
+            unsigned int alpha = atoi(argv[4]);
+
+            return run(train_set_file, test_set_file, classif, k, alpha, method);
+        } else {
+            printf("Parametros Invalidos\n");
+            return 1;
         }
     }
 }

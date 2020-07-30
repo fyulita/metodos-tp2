@@ -38,7 +38,12 @@ gunzip data/train.csv.gz
 gunzip data/test.csv.gz
 ```
 
-Listo! Ya se puede disfrutar del TP2
+Listo! Ya se puede disfrutar del TP2.
+
+Para ver los detalles de la ejecución del programa desde la consola primero compilar el código y luego correr:
+```
+build/tp2 --help
+```
 
 ### Datos
 
