@@ -30,7 +30,7 @@ Matrix PCA::covariance(Matrix A) {
 }
 
 void PCA::fit(const Matrix& X) {
-    std::cout << "Calculando covarianza" << std::endl;
+    std::cout << "Calculando covarianza..." << std::endl;
     Matrix C = covariance(X);
 
     std::pair<Vector, Matrix> eigens = get_first_eigenvalues(C, alpha);
@@ -41,5 +41,6 @@ void PCA::fit(const Matrix& X) {
 }
 
 MatrixXd PCA::transform(const Matrix& X) {
+    std::cout << "Listo!" << std::endl;
     return X * T;
 }

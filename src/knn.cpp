@@ -1,9 +1,7 @@
 #include <algorithm>
-//#include <chrono>
 #include <iostream>
 #include "knn.h"
-#include <numeric>      
-#include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -71,8 +69,10 @@ double KNNClassifier::predictAux(const Vector& vec) {
 Vector KNNClassifier::predict(Matrix A) {
     Vector ret(A.rows());
     for (unsigned int i = 0; i < A.rows(); i++) {
+        std::cout << "Prediciendo... (" << i + 1 << "/" << A.rows() << ")" << std::endl;
         ret(i) = predictAux(A.row(i));
     }
+    std::cout << "Listo!" << std::endl;
 
     return ret;
 }

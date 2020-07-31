@@ -39,7 +39,7 @@ std::pair<Vector, Matrix> get_first_eigenvalues(const Matrix& X, unsigned num, u
         eigenvalue = std::get<0>(eigens);
         eigenvector = std::get<1>(eigens);
 
-        std::cout << "Calculando autovalores (" << i + 1 << "/" << num << ")" << std::endl;
+        std::cout << "Calculando autovalores... (" << i + 1 << "/" << num << ")" << std::endl;
 
         eigenvalues(i) = eigenvalue;
         eigenvectors.col(i) = eigenvector;
